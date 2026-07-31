@@ -9,7 +9,9 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "node scripts/test-enrich.ts",
-    "library": "node scripts/build-library.ts"
+    "library": "node scripts/build-library.ts",
+    "demo": "node scripts/make-demo.ts",
+    "build:private": "node scripts/build-private.mjs"
   },
   "dependencies": {
     "react": "^19.2.8",

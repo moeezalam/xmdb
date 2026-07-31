@@ -34,27 +34,25 @@ const PLAYER_W = 640
 const PLAYER_H = 360
 
 /*
- * YouTube keeps drawing chrome over the video even while it plays — traced it:
- * the player reports PLAYING once and never pauses, yet a ⏮ ⏸ ⏭ cluster sits
- * across the middle and a "More videos" strip across the bottom. So hiding on
- * pause is not enough and nothing centred can be cropped away by scaling
- * alone.
+ * A gentle crop, not a zoom.
  *
- * Measured against the player's own height, the chrome occupies roughly:
+ * An earlier version blew the player up 3.5x to dodge YouTube's centred
+ * transport overlay, and the result was an unreadable close-up — the framing
+ * of the shot is most of what makes the tile worth looking at. So the crop is
+ * back to trimming the outer edges only: enough to take the video title off
+ * the top-left and the watermark off the bottom-right, and no more.
  *
- *   0.00 – 0.12   video title, top-left
- *   0.44 – 0.56   transport controls, centred
- *   0.80 – 1.00   progress bar and "More videos"
+ * The centred overlay is handled by not showing the player at all until it is
+ * genuinely playing, which is when YouTube hides that chrome anyway.
  *
- * which leaves a clean band from 0.12 to 0.44. The player is blown up until
- * the tile is small enough to sit inside that band, then pushed down so the
- * band is what shows. The tile ends up as a close-up of the trailer, which at
- * 112x62 is the right read anyway — the PSP's animated icons were tight crops
- * too.
+ * Note for anyone chasing this again: headless Chrome draws the transport
+ * overlay and a "More videos" strip over the video even though `controls=0` is
+ * confirmed present in the player URL and the player never leaves the PLAYING
+ * state. That appears to be a quirk of running without a compositor, so do not
+ * tune these constants against a headless screenshot.
  */
-const OVERSCALE = 3.5
-/** Puts the tile window at 0.28 of the player height — the middle of the band. */
-const OFFSET_Y = 48
+const OVERSCALE = 1.22
+const OFFSET_Y = 0
 const SCALE = (ICON_SEL_W * OVERSCALE) / PLAYER_W
 
 /**
