@@ -297,17 +297,42 @@ a.tile {
   background: linear-gradient(90deg, #6fb6ff, #b9e0ff);
 }
 
+/*
+ * Hidden until the player reports PLAYING, so YouTube's load and paused chrome
+ * never appears over the tile. Fades in over the still artwork underneath.
+ */
 .trailer {
   position: absolute;
   inset: 0;
   overflow: hidden;
+  opacity: 0;
+  transition: opacity 380ms ease;
+  pointer-events: none;
+}
+
+.trailer.playing {
+  opacity: 1;
   background: #000;
 }
 
-.trailer iframe {
+/*
+ * The player is blown up past the tile and centre-cropped: YouTube draws the
+ * video title in the top-left and its watermark in the bottom-right, and both
+ * land outside the visible area at this scale.
+ */
+.trailer-crop {
   position: absolute;
-  left: 0;
+  left: 50%;
+  top: 50%;
+  /* Width, height and scale come from the component — see Trailer.tsx. */
+  transform-origin: center center;
+}
+
+.trailer-crop iframe {
+  width: 100%;
+  height: 100%;
   border: 0;
+  display: block;
   pointer-events: none;
 }
 

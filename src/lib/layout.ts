@@ -75,8 +75,14 @@ export const TAU = 0.075
 export const REPEAT_DELAY = 380
 export const REPEAT_FAST = 55
 export const REPEAT_ACCEL = 0.72
-/** How long the selection must hold still before the trailer is allowed to start. */
-export const TRAILER_DWELL = 700
+/**
+ * How long the selection must hold still before the trailer is allowed to
+ * start. Long enough to read the card and look at the artwork — the tile is
+ * the point, and motion arriving instantly steps on it. The player then takes
+ * a further beat to load and report PLAYING before it fades in, so the still
+ * is on screen for roughly three seconds in practice.
+ */
+export const TRAILER_DWELL = 2000
 
 /** Falloff for the opacity ramp away from the cross point. */
 export const FALLOFF = 0.55

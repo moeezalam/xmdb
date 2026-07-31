@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Personal library: the public repo ships the demo in library.json instead.
+public/data/library.local.json

@@ -28,8 +28,26 @@ npm install
 npm run dev
 ```
 
-The repo ships `public/data/library.json`, already built from the watchlist CSV
-and already carrying artwork for every title.
+The repo ships a **demo library** at `public/data/library.json` — 32 titles
+spread deliberately across 11 decades, 22 genres and 22 directors so that every
+column has something in it — with artwork and trailers already fetched.
+
+### Running it against your own watchlist
+
+Build your library to `public/data/library.local.json`, which the app prefers
+when it exists and which is gitignored:
+
+```bash
+npm run library -- "path/to/Watchlist.csv" --local
+```
+
+The demo stays in `library.json` for the public site; your list never leaves
+your machine. `public/` is copied verbatim into `dist`, so a Vite plugin also
+strips `library.local.json` from the build output — git ignoring it alone would
+still let a local `npm run build` publish it.
+
+Or skip the file entirely and use *Settings ▸ Import Watchlist CSV* in the app,
+which stores the result in IndexedDB.
 
 ## Controls
 
@@ -85,14 +103,16 @@ columns are matched by header name, not position.
 
 Get the file from IMDb ▸ Your Watchlist ▸ ⋯ ▸ Export.
 
-**From the command line** — regenerate the bundled library instead:
+**From the command line** — regenerate a bundled library instead:
 
 ```bash
-npm run library -- "path/to/Watchlist.csv"
+npm run library -- "path/to/Watchlist.csv" --local
 ```
 
-That fetches artwork from Cinemeta as it goes. Set `TMDB_API_KEY` on the command
-to add a TMDB fallback pass for anything Cinemeta misses.
+That fetches artwork from Cinemeta as it goes. Drop `--local` to overwrite the
+demo in `library.json`. Set `TMDB_API_KEY` on the command to add a TMDB
+fallback pass for anything Cinemeta misses. `scripts/make-demo.ts` regenerates
+the demo set from a local library.
 
 > **IMDb list URLs are not supported.** IMDb has no public API, and its list
 > pages cannot be read from the browser (CORS) or scraped reliably from Node
@@ -136,9 +156,28 @@ A **TMDB key is optional**. If one is set under *Settings ▸ TMDB Key*, it runs
 as a second pass over whatever Cinemeta could not fill. Either a v3 API key or a
 v4 read token works; the shape is detected. It is stored in this browser only.
 
-Trailers are YouTube embeds, because YouTube ids are what both providers hand
-out. Region-locked or embedding-disabled videos will not play; the still tile
-stays underneath, so it degrades to "no motion" rather than a hole.
+### The trailer tile
+
+Trailers are YouTube, because YouTube ids are what both providers hand out.
+Getting them to look like a PSP animated icon rather than an embedded video
+took three things:
+
+- **A dwell before starting.** The selection has to sit still for 2 s, and the
+  player is then revealed only once it reports `PLAYING` and holds it for a
+  further 900 ms. The card and its artwork are on screen for roughly three
+  seconds before anything moves.
+- **Rendering the player large, then scaling it down.** At the tile's ~112 px
+  width YouTube switches to a tiny-player layout where the video title and the
+  centre play button fill the frame. Built at 640×360 and scaled by ~0.6, the
+  chrome is normally proportioned.
+- **Cropping to a clean band.** YouTube keeps drawing chrome over playing video
+  — traced it: the player reports `PLAYING` once and never pauses, yet the
+  transport controls sit across the middle and a "More videos" strip across the
+  bottom. Measured against player height the chrome occupies about 0–0.12,
+  0.44–0.56 and 0.80–1.0, so the tile is positioned in the clean band at 0.28.
+
+Region-locked or embedding-disabled videos never reach `PLAYING`; the still
+artwork stays underneath, so it degrades to "no motion" rather than a hole.
 
 ## Layout and calibration
 

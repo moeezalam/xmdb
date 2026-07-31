@@ -86,12 +86,25 @@ export default function App() {
   useEffect(() => {
     let alive = true
     void (async () => {
+      /*
+       * library.local.json wins when it exists. It is gitignored, so a personal
+       * watchlist stays on the machine that built it while the committed
+       * library.json — the demo set — is what the public site serves.
+       */
       let bundled: Library | null = null
-      try {
-        const res = await fetch(`${import.meta.env.BASE_URL}data/library.json`)
-        if (res.ok) bundled = (await res.json()) as Library
-      } catch {
-        // No bundled library is a valid state — the user can import one.
+      for (const name of ['library.local.json', 'library.json']) {
+        try {
+          const res = await fetch(`${import.meta.env.BASE_URL}data/${name}`)
+          if (!res.ok) continue
+          const body = (await res.json()) as Library
+          // A 404 handler can return index.html with a 200; insist on real data.
+          if (Array.isArray(body?.titles)) {
+            bundled = body
+            break
+          }
+        } catch {
+          // Either file being absent is fine — the user can import a CSV.
+        }
       }
       const [stored, savedMarks] = await Promise.all([loadLibrary(), loadSaveData()])
       if (!alive) return

@@ -17,13 +17,22 @@ import { enrichAll as enrichTmdb } from '../src/lib/tmdb.ts'
 import type { Library } from '../src/lib/types.ts'
 
 const here = dirname(fileURLToPath(import.meta.url))
-const out = resolve(here, '../public/data/library.json')
 
-const csvPath = process.argv[2]
+const args = process.argv.slice(2)
+/**
+ * --local writes library.local.json, which the app prefers at boot and which is
+ * gitignored. That is how a personal watchlist stays off the public site while
+ * library.json keeps holding the demo set.
+ */
+const local = args.includes('--local')
+const csvPath = args.find((a) => !a.startsWith('--'))
+
 if (!csvPath) {
-  console.error('usage: node scripts/build-library.ts <watchlist.csv>')
+  console.error('usage: node scripts/build-library.ts <watchlist.csv> [--local]')
   process.exit(1)
 }
+
+const out = resolve(here, `../public/data/library${local ? '.local' : ''}.json`)
 
 const csv = readFileSync(csvPath, 'utf8')
 let titles = titlesFromCsv(csv)
