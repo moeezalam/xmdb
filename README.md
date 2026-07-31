@@ -239,6 +239,10 @@ Nothing here is Sony's.
   The real face is SCE-PS3 Rodin, licensed from Fontworks and not
   redistributable.
 
+XrossMediaBar, XMB, PSP and PlayStation are trademarks of Sony Interactive
+Entertainment Inc. This is an independent tribute, not affiliated with or
+endorsed by Sony. The code is MIT licensed; see [LICENSE](LICENSE).
+
 Movie metadata and artwork are fetched at runtime from Cinemeta, and optionally
 from TMDB under your own key. This product uses the TMDB API but is not endorsed
 or certified by TMDB. The watch link is a plain search query against a
