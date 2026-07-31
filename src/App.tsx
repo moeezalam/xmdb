@@ -90,9 +90,17 @@ export default function App() {
        * library.local.json wins when it exists. It is gitignored, so a personal
        * watchlist stays on the machine that built it while the committed
        * library.json — the demo set — is what the public site serves.
+       *
+       * Only probed in dev: the build strips the file from dist, so in
+       * production the request could only ever 404, and a failed fetch is
+       * logged by the browser no matter how it is handled.
        */
+      const sources = import.meta.env.DEV
+        ? ['library.local.json', 'library.json']
+        : ['library.json']
+
       let bundled: Library | null = null
-      for (const name of ['library.local.json', 'library.json']) {
+      for (const name of sources) {
         try {
           const res = await fetch(`${import.meta.env.BASE_URL}data/${name}`)
           if (!res.ok) continue
