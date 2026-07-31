@@ -1,4 +1,25 @@
+<div align="center">
+
 # XMDB — your IMDb watchlist as a PSP XMB
+
+**A pixel-space clone of the PSP's XrossMediaBar, driving an IMDb watchlist instead of a Memory Stick. Your films become games: backdrop icons, trailers playing inside the tile, save-data badges, and the cursor blips synthesised in the Web Audio API.**
+
+[**→ Open the live demo**](https://moeezalam.github.io/xmdb/)
+
+[![Live demo](https://img.shields.io/badge/demo-live-brightgreen)](https://moeezalam.github.io/xmdb/)
+![Canvas](https://img.shields.io/badge/canvas-480%20%C3%97%20272-8b5cf6)
+![Stack](https://img.shields.io/badge/React%20%2B%20TypeScript-Vite-646cff)
+![Tests](https://img.shields.io/badge/tests-37%20checks-success)
+![Input](https://img.shields.io/badge/input-keyboard%20%2B%20gamepad-orange)
+[![License: MIT](https://img.shields.io/badge/license-MIT-yellow)](LICENSE)
+
+[![XMDB running the demo library — the XMB cross, a selected tile and its metadata plate](docs/screenshot.png)](https://moeezalam.github.io/xmdb/)
+
+<sub>The live demo, running the bundled 32-title library. No install, no key, no account.</sub>
+
+</div>
+
+---
 
 A pixel-space clone of the PSP's XrossMediaBar game menu, driving an IMDb
 watchlist instead of a Memory Stick.
